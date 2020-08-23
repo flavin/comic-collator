@@ -1,12 +1,12 @@
 import os
 import argparse
 
-from collator import order_in_western_style
+from collator import ORDER_FACTORY, STYLE_TYPE
 from image_writer import write_couples
 
 
-def process(total: int) -> list:
-    return order_in_western_style(total)
+def get_order_pages(style: STYLE_TYPE, total: int) -> list:
+    return ORDER_FACTORY[style](total)
 
 
 def count_files(path: str) -> int:
@@ -15,12 +15,24 @@ def count_files(path: str) -> int:
     else:
         return len(os.listdir(path))
 
+
+def get_collator_style(style: str) -> STYLE_TYPE:
+    valid_styles = ["western", "japan"]
+    if style in valid_styles:
+        return STYLE_TYPE(style)
+    else:
+        return STYLE_TYPE("western")
+
+
 def main():
     parser = argparse.ArgumentParser("Script to generate page to print comics")
     parser.add_argument("-t", "--total", type=int, help="Number of images")
     parser.add_argument("-p", "--path", type=str, help="Image path")
     parser.add_argument("-e", "--extension", type=str, required=True, help="Extension")
     parser.add_argument("-w", "--wet_run", type=int, help="wet run")
+    parser.add_argument(
+        "-s", "--style", type=str, help="type 'western' or 'japan'", default="western"
+    )
     parser.add_argument(
         "-di",
         "--default_image",
@@ -29,10 +41,12 @@ def main():
     )
     args = parser.parse_args()
 
-    total = count_files(path=args.path)
-    list_of_pages = process(total=total or args.total)
+    collator_style = get_collator_style(args.style)
+    files_count = count_files(path=args.path)
+    order_pages = get_order_pages(style=collator_style, total=files_count or args.total)
+    print(order_pages)
     write_couples(
-        list_of_pages,
+        order_pages,
         path=args.path,
         extension=args.extension,
         default_image=args.default_image,

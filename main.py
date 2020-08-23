@@ -1,27 +1,5 @@
-import os
 import argparse
-
-from collator import ORDER_FACTORY, STYLE_TYPE
-from image_writer import write_couples
-
-
-def get_order_pages(style: STYLE_TYPE, total: int) -> list:
-    return ORDER_FACTORY[style](total)
-
-
-def count_files(path: str) -> int:
-    if not path:
-        return 0
-    else:
-        return len(os.listdir(path))
-
-
-def get_collator_style(style: str) -> STYLE_TYPE:
-    valid_styles = ["western", "japan"]
-    if style in valid_styles:
-        return STYLE_TYPE(style)
-    else:
-        return STYLE_TYPE("western")
+import printcomic
 
 
 def main():
@@ -41,16 +19,8 @@ def main():
     )
     args = parser.parse_args()
 
-    collator_style = get_collator_style(args.style)
-    files_count = count_files(path=args.path)
-    order_pages = get_order_pages(style=collator_style, total=files_count or args.total)
-    print(order_pages)
-    write_couples(
-        order_pages,
-        path=args.path,
-        extension=args.extension,
-        default_image=args.default_image,
-        wet_run=bool(args.wet_run),
+    printcomic.create_printable_pages(
+        args.style, args.path, args.extension, args.default_image, args.wet_run
     )
 
 

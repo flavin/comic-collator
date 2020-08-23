@@ -1,6 +1,6 @@
 import unittest
 
-from collator import order_in_japan_style, order_in_western_style
+from printcomic.collator import order_in_japan_style, order_in_western_style
 
 
 class TestCollator(unittest.TestCase):

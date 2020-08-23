@@ -6,3 +6,9 @@ print comics
 ```
 
 will return the list of images ordered to print
+
+---
+restrictions:
+- files must to have same extension
+- don't support joined images.
+- prefered same images size.

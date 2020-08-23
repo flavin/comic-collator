@@ -1,0 +1,2 @@
+# printcomic
+print comics

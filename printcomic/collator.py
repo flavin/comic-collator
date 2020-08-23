@@ -2,6 +2,7 @@ import math
 from enum import Enum
 from typing import List
 
+
 class STYLE_TYPE(Enum):
     WESTERN = 'western'
     JAPAN = 'japan'

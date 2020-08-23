@@ -1,4 +1,5 @@
 import glob
+
 from printcomic.collator import ORDER_FACTORY, STYLE_TYPE
 from printcomic.image_writer import write_couples
 

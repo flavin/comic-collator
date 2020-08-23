@@ -8,7 +8,17 @@ print comics
 will return the list of images ordered to print
 
 ---
-restrictions:
+restrictions (aka. stuff to improve):
 - files must to have same extension
 - don't support joined images.
 - prefered same images size.
+- assume filename format of number like 00.extension(ex. 01.jpg)
+- assume image are portrait.
+- collate for letter size papers.
+- don't print directly (maybe with a config file to setup the printer values)
+
+some possibilities in future:
+- config file
+- choose image size
+   - maybe review images sizes and suggest choose one if are different sizes.
+- choose margin

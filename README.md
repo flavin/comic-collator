@@ -16,9 +16,11 @@ restrictions (aka. stuff to improve):
 - assume image are portrait.
 - collate for letter size papers.
 - don't print directly (maybe with a config file to setup the printer values)
+- max number of images 99
 
 some possibilities in future:
 - config file
 - choose image size
    - maybe review images sizes and suggest choose one if are different sizes.
 - choose margin
+- maybe indicate the format of filenames

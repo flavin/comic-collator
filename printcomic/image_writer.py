@@ -1,10 +1,11 @@
 import os
-import subprocess
-from typing import Optional
+from typing import List, Optional
+
+from PIL import Image
 
 
-def write_couples(
-    list_of_pages: list,
+def concat_couples(
+    list_of_pages: List[int],
     path: str,
     extension: str,
     default_image: Optional[str] = None,
@@ -14,65 +15,101 @@ def write_couples(
     index = 0
     for i in range(0, len(list_of_pages), 4):
         index += 1
-        args = prepare_command_arg(
-            index,
+        concat_couple(
+            path,
             list_of_pages[i],
             list_of_pages[i + 1],
-            path,
+            index,
             "front",
             extension,
             default_image,
+            wet_run,
         )
-        if wet_run:
-            subprocess.run(*args)
-        else:
-            print(" ".join(args))
+
     print("second round")
     for i in range(2, len(list_of_pages), 4):
         index += 1
-        args = prepare_command_arg(
-            index,
+        concat_couple(
+            path,
             list_of_pages[i],
             list_of_pages[i + 1],
-            path,
+            index,
             "back",
             extension,
             default_image,
+            wet_run,
         )
-        if wet_run:
-            subprocess.run(*args)
-        else:
-            print(" ".join(args))
 
 
-def prepare_command_arg(
-    index: int,
+def concat_couple(
+    path: str,
     index_a: int,
     index_b: int,
-    path: str,
-    prefix: str,
+    index_out: int,
+    prefix,
     extension: str,
     default_image: Optional[str] = None,
-) -> list:
-    image_a = "{}.{}".format(str(index_a).zfill(2), extension)
-    image_a = _get_image_or_default(path, image_a, default_image)
-    image_b = "{}.{}".format(str(index_b).zfill(2), extension)
-    image_b = _get_image_or_default(path, image_b, default_image)
-    output = "{}-{}.{}".format(prefix, str(index).zfill(2), extension)
+    wet_run: bool = False,
+):
+    image_a = _get_image(path, index_a, extension, default_image)
+    image_b = _get_image(path, index_b, extension, default_image)
+    output = "{}{}-{}.{}".format(path, prefix, str(index_out).zfill(2), extension)
+    if wet_run:
+        new_image = concat(image_a, image_b)
+        new_image.save(output)
+    else:
+        print(" ".join([image_a, image_b, output]))
 
-    args = ["convert", image_a, image_b, "+append", output]
-    return args
+
+def _get_image(
+    path: str, index: int, extension: str, default_image: Optional[str] = None
+) -> str:
+    image_name = "{}{}.{}".format(path, str(index).zfill(2), extension)
+    image_name = _get_image_or_default(image_name, default_image)
+    return image_name
 
 
 def _get_image_or_default(
-    path: str, image: str, default_image: Optional[str] = None
+    image_absolute: str, default_image: Optional[str] = None
 ) -> str:
     """
     :raise FileNotFoundError
     """
-    if not os.path.exists("{}{}".format(path, image)):
+    if not os.path.exists("{}".format(image_absolute)):
         if default_image:
-            image = default_image
+            image_absolute = default_image
         else:
-            raise FileNotFoundError("{} not found".format(image))
-    return image
+            raise FileNotFoundError("{} not found".format(image_absolute))
+    return image_absolute
+
+
+def concat(
+    image_a: str,
+    image_b: str,
+    mode: str = "RGB",
+    resample: int = Image.BICUBIC,
+    resize_big_image: bool = True,
+):
+    im1 = Image.open(image_a)
+    im2 = Image.open(image_b)
+
+    if im1.height == im2.height:
+        _im1 = im1
+        _im2 = im2
+    elif ((im1.height > im2.height) and resize_big_image) or (
+        (im1.height < im2.height) and not resize_big_image
+    ):
+        _im1 = im1.resize(
+            (int(im1.width * im2.height / im1.height), im2.height), resample=resample
+        )
+        _im2 = im2
+    else:
+        _im1 = im1
+        _im2 = im2.resize(
+            (int(im2.width * im1.height / im2.height), im1.height), resample=resample
+        )
+
+    dst = Image.new(mode, (_im1.width + _im2.width, _im1.height))
+    dst.paste(_im1, (0, 0))
+    dst.paste(_im2, (_im1.width, 0))
+    return dst

@@ -1,8 +1,9 @@
 # printcomic
 collate image files and concat images ready to print.
 
+
 ```
- python3 main.py --path /route/to/comic-NN/ --extension png --default_image /route/to/default/000.jpg
+python printcomic/__main__.py --path /route/to/comic-NN/ --extension png --default_image /route/to/default/000.jpg
 ```
 
 **Options**:
@@ -33,6 +34,7 @@ collate image files and concat images ready to print.
      ```
 
 ---
+
 restrictions (aka. stuff to improve):
 * files must to have same extension
 * don't support joined images.
@@ -49,6 +51,9 @@ some possibilities in future:
 * config file
 * choose image size
    * maybe review images sizes and suggest choose one if are different sizes.
+* choose extension
+   * for example if are only one extension use that one, if has more ask for validation, or priority.
 * choose margin
 * maybe indicate the format of filenames
 * don't require the default image and draw an white page.
+* don't require path and use current directory.

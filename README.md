@@ -1,5 +1,5 @@
 # printcomic
-collate image files and concat images ready to print.
+Comic collator, collate image files and concat images leaving ready to print.
 
 
 ```

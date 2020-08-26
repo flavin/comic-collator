@@ -1,4 +1,5 @@
 import math
+from dataclasses import dataclass
 from enum import Enum
 from typing import List
 
@@ -8,25 +9,34 @@ class STYLE_TYPE(Enum):
     JAPAN = "japan"
 
 
-def order_in_western_style(total: int) -> List[int]:
-    list_of_pages = []
+@dataclass
+class CollatedOrder:
+    front: List[int]
+    back: List[int]
+
+
+def order_in_western_style(total: int) -> CollatedOrder:
+    front_collated = []
+    back_collated = []
     total_pages = math.ceil(total / 4)
 
     for i in range(1, total_pages + 1):
         reverse_index = (total_pages * 2) - i + 1
-        list_of_pages.append(reverse_index * 2)
-        list_of_pages.append(2 * i - 1)
-        list_of_pages.append(2 * i)
-        list_of_pages.append(reverse_index * 2 - 1)
+        front_collated.append(reverse_index * 2)
+        front_collated.append(2 * i - 1)
+        back_collated.append(2 * i)
+        back_collated.append(reverse_index * 2 - 1)
 
-    return list_of_pages
+    return CollatedOrder(front=front_collated, back=back_collated)
 
 
-def order_in_japan_style(total: int) -> List[int]:
+def order_in_japan_style(total: int) -> CollatedOrder:
     western_order = order_in_western_style(total)
-    western_order.reverse()
-    japan_order = western_order.copy()
-    return japan_order
+    front_collated = western_order.front or []
+    back_collated = western_order.back or []
+    front_collated.reverse()
+    back_collated.reverse()
+    return CollatedOrder(front=front_collated, back=back_collated)
 
 
 ORDER_FACTORY = {

@@ -1,17 +1,23 @@
 import unittest
 
-from printcomic.collator import order_in_japan_style, order_in_western_style
+from printcomic.collator import (
+    CollatedOrder,
+    order_in_japan_style,
+    order_in_western_style,
+)
 
 
 class TestCollator(unittest.TestCase):
     def test_western(self):
         self.assertEqual(
-            order_in_western_style(10), [12, 1, 2, 11, 10, 3, 4, 9, 8, 5, 6, 7]
+            order_in_western_style(10),
+            CollatedOrder(front=[12, 1, 10, 3, 8, 5], back=[2, 11, 4, 9, 6, 7]),
         )
 
     def test_japan(self):
         self.assertEqual(
-            order_in_japan_style(10), [7, 6, 5, 8, 9, 4, 3, 10, 11, 2, 1, 12]
+            order_in_japan_style(10),
+            CollatedOrder(front=[5, 8, 3, 10, 1, 12], back=[7, 6, 9, 4, 11, 2]),
         )
 
 

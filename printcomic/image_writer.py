@@ -1,64 +1,76 @@
 import os
-from typing import List, Optional
+from enum import Enum
+from typing import Optional
 
 from PIL import Image
 
+from printcomic.collator import CollatedOrder
+from printcomic.utils import progress
+
+
+class PRINT_ORDER(Enum):
+    ASC = 0
+    DESC = 1
 
 def concat_couples(
-    list_of_pages: List[int],
+    list_of_pages: CollatedOrder,
     path: str,
     extension: str,
     default_image: Optional[str] = None,
+    back_order: PRINT_ORDER = PRINT_ORDER.ASC,
     wet_run: bool = False,
 ):
-    print("first round")
-    index = 0
-    for i in range(0, len(list_of_pages), 4):
-        index += 1
+    assert len(list_of_pages.front) == len(list_of_pages.back)
+    steps = 2
+    print("Front pages")
+    total = len(list_of_pages.front)
+    for index, i in enumerate(range(0, total, steps), 1):
+        progress(index/(total/steps))
+        output_name = "{}front-{}.{}".format(path, str(index).zfill(2), extension)
         concat_couple(
             path,
-            list_of_pages[i],
-            list_of_pages[i + 1],
-            index,
-            "front",
+            list_of_pages.front[i],
+            list_of_pages.front[i + 1],
+            output_name,
             extension,
             default_image,
             wet_run,
         )
 
-    print("second round")
-    for i in range(2, len(list_of_pages), 4):
-        index += 1
+    print("\nBack page")
+    for index, i in enumerate(range(0, total, steps), 1):
+        progress(index/(total/steps))
+        back_order_index = int((total/steps)) - index + 1
+        back_order_sufix = '{}-for_front_'.format(str(back_order_index).zfill(2)) if back_order == PRINT_ORDER.DESC else ''
+        output_name = "{}back-{}{}.{}".format(path, back_order_sufix, str(index).zfill(2), extension)
         concat_couple(
             path,
-            list_of_pages[i],
-            list_of_pages[i + 1],
-            index,
-            "back",
+            list_of_pages.back[i],
+            list_of_pages.back[i + 1],
+            output_name,
             extension,
             default_image,
             wet_run,
         )
+    print("\ndone")
 
 
 def concat_couple(
     path: str,
     index_a: int,
     index_b: int,
-    index_out: int,
-    prefix,
+    output_name: str,
     extension: str,
     default_image: Optional[str] = None,
     wet_run: bool = False,
 ):
     image_a = _get_image(path, index_a, extension, default_image)
     image_b = _get_image(path, index_b, extension, default_image)
-    output = "{}{}-{}.{}".format(path, prefix, str(index_out).zfill(2), extension)
     if wet_run:
         new_image = concat(image_a, image_b)
-        new_image.save(output)
+        new_image.save(output_name)
     else:
-        print(" ".join([image_a, image_b, output]))
+        print(" ".join([image_a, image_b, output_name]))
 
 
 def _get_image(

@@ -1,4 +1,4 @@
-# printcomic
+# Comic Collator
 Comic collator, collate image files and concat images leaving ready to print.
 
 

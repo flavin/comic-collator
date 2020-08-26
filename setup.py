@@ -22,4 +22,9 @@ setup(
     install_requires=["Pillow"],
     scripts=[],
     test_suite="tests",
+    entry_points={
+          'console_scripts': [
+              'printcomic = printcomic.__main__:main'
+          ]
+      },
 )

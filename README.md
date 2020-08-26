@@ -1,11 +1,11 @@
 # printcomic
-print comics, collate image files and concat images ready to print.
+collate image files and concat images ready to print.
 
 ```
  python3 main.py --path /route/to/comic-NN/ --extension png --default_image /route/to/default/000.jpg
 ```
 
-Options:
+**Options**:
 * -p, --path
    * image directory
 * -e, --extension
@@ -18,8 +18,19 @@ Options:
    * default image, to fill empty pages.
 * -bo, --back_order [ORDER]
    * back print order, ORDER can be ASC or DESC, by default is ASC
-   DESC help to print front pages, then take the pages and just put in the printer
-   to print background
+   DESC help to print front pages and then put again in same order front was printed.
+   To print 
+   
+   For example will produce:
+   
+     ```
+     front 1
+     front 2
+     front 3
+     back for front 3
+     back for front 2
+     back for front 1
+     ```
 
 ---
 restrictions (aka. stuff to improve):

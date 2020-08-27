@@ -1,7 +1,12 @@
 # Comic Collator
 Comic collator, collate image files and concat images leaving ready to print.
 
+# Instalation
+```
+pip install git+git://github.com/flavin/comic-collator
+```
 
+# Usage
 ```
 comic_collator/__main__.py --path /route/to/comic-NN/ --extension png --default_image /route/to/default/000.jpg
 ```
@@ -35,7 +40,7 @@ comic_collator/__main__.py --path /route/to/comic-NN/ --extension png --default_
 
 ---
 
-restrictions (aka. stuff to improve):
+**Restrictions** (aka. stuff to improve):
 * files must to have same extension
 * don't support joined images.
 * prefered same images size.
@@ -47,7 +52,7 @@ restrictions (aka. stuff to improve):
 * don't print directly (maybe with a config file to setup the printer values)
 * max number of images 999
 
-some possibilities in future:
+**some possibilities in future**:
 * config file
 * choose image size
    * maybe review images sizes and suggest choose one if are different sizes.

@@ -3,7 +3,7 @@ Comic collator, collate image files and concat images leaving ready to print.
 
 
 ```
-python printcomic/__main__.py --path /route/to/comic-NN/ --extension png --default_image /route/to/default/000.jpg
+python comic-collator/__main__.py --path /route/to/comic-NN/ --extension png --default_image /route/to/default/000.jpg
 ```
 
 **Options**:

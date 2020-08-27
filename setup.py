@@ -18,13 +18,13 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     author="Francisco Lavin",
-    packages=["comiccollator"],
+    packages=["comic_collator"],
     install_requires=["Pillow"],
     scripts=[],
     test_suite="tests",
     entry_points={
           'console_scripts': [
-              'comiccollator = comiccollator.__main__:main'
+              'comic_collator = comic_collator.__main__:main'
           ]
       },
 )

@@ -1,6 +1,6 @@
 import argparse
 
-import comiccollator
+import comic_collator
 
 
 def main():
@@ -21,7 +21,7 @@ def main():
     )
     args = parser.parse_args()
 
-    comiccollator.create_printable_pages(
+    comic_collator.create_printable_pages(
         args.style,
         args.path,
         args.extension,

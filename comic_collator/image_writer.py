@@ -4,8 +4,8 @@ from typing import Optional
 
 from PIL import Image
 
-from comiccollator.collator import CollatedOrder
-from comiccollator.utils import progress
+from comic_collator.collator import CollatedOrder
+from comic_collator.utils import progress
 
 
 class PRINT_ORDER(Enum):

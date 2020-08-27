@@ -1,6 +1,6 @@
 import unittest
 
-from comiccollator.collator import (
+from comic_collator.collator import (
     CollatedOrder,
     order_in_japan_style,
     order_in_western_style,

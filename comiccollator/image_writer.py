@@ -12,6 +12,7 @@ class PRINT_ORDER(Enum):
     ASC = 0
     DESC = 1
 
+
 def concat_couples(
     list_of_pages: CollatedOrder,
     path: str,
@@ -20,14 +21,15 @@ def concat_couples(
     back_order: PRINT_ORDER = PRINT_ORDER.ASC,
     wet_run: bool = False,
 ):
-    assert len(list_of_pages.front) == len(list_of_pages.back)
+    if len(list_of_pages.front) != len(list_of_pages.back):
+        raise RuntimeError("front page don't match with back pages")
     steps = 2
     print("Front pages")
     total = len(list_of_pages.front)
     for index, i in enumerate(range(0, total, steps), 1):
         if wet_run:
-            progress(index/(total/steps))
-        output_name = "{}front-{}.{}".format(path, str(index).zfill(3), extension)
+            progress(index / (total / steps))
+        output_name = f"{path}front-{str(index).zfill(3)}.{extension}"
         concat_couple(
             path,
             list_of_pages.front[i],
@@ -41,10 +43,14 @@ def concat_couples(
     print("\nBack page")
     for index, i in enumerate(range(0, total, steps), 1):
         if wet_run:
-            progress(index/(total/steps))
-        back_order_index = int((total/steps)) - index + 1
-        back_order_sufix = '{}-for_front_'.format(str(back_order_index).zfill(3)) if back_order == PRINT_ORDER.DESC else ''
-        output_name = "{}back-{}{}.{}".format(path, back_order_sufix, str(index).zfill(3), extension)
+            progress(index / (total / steps))
+        back_order_index = int((total / steps)) - index + 1
+        back_order_sufix = (
+            f"{str(back_order_index).zfill(3)}-for_front_"
+            if back_order == PRINT_ORDER.DESC
+            else ""
+        )
+        output_name = f"{path}back-{back_order_sufix}{str(index).zfill(3)}.{extension}"
         concat_couple(
             path,
             list_of_pages.back[i],
@@ -82,7 +88,7 @@ def get_image_name(
     attempt to find filename like 1.{extension} or 01.{extension} or 001.{extension}
     """
     for i in range(1, 4):
-        image_name = "{}{}.{}".format(path, str(index).zfill(i), extension)
+        image_name = f"{path}{str(index).zfill(i)}.{extension}"
         image_name = _get_image_or_default(image_name)
         if image_name:
             return image_name
@@ -90,20 +96,20 @@ def get_image_name(
         if default_image:
             return default_image
         else:
-            images_searched = ['{}.{}'.format(index, extension)]
+            images_searched = [f"{index}.{extension}"]
             if index < 100:
-                images_searched.append('0{}.{}'.format(index, extension))
+                images_searched.append(f"0{index}.{extension}")
             if index < 10:
-                images_searched.append('00{}.{}'.format(index, extension))
-            raise FileNotFoundError("File not found({})".format(' or '.join(images_searched)))
-
+                images_searched.append(f"00{index}.{extension}")
+            images = " or ".join(images_searched)
+            raise FileNotFoundError(f"File not found({images})")
 
 
 def _get_image_or_default(image_absolute: str) -> Optional[str]:
     """
     :raise FileNotFoundError
     """
-    if os.path.exists("{}".format(image_absolute)):
+    if os.path.exists(f"{image_absolute}"):
         return image_absolute
     else:
         return None

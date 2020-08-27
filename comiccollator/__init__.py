@@ -30,8 +30,7 @@ def create_printable_pages(
 
 def get_order_pages(style: STYLE_TYPE, total: int) -> CollatedOrder:
     if total > 999:
-        # TODO: support without limit
-        raise ValueError("Only supported until 99 images for now")
+        raise ValueError("Only supported until 999 images for now")
     return ORDER_FACTORY[style](total)
 
 

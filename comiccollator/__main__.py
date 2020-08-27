@@ -12,11 +12,12 @@ def main():
     parser.add_argument(
         "-bo", "--back_order", type=str, help="back images order", default="ASC"
     )
+    parser.add_argument("-s", "--style", type=str, help="type 'western' or 'japan'", default="western")
     parser.add_argument(
-        "-s", "--style", type=str, help="type 'western' or 'japan'", default="western"
-    )
-    parser.add_argument(
-        "-di", "--default_image", type=str, help="default image, to fill empty pages",
+        "-di",
+        "--default_image",
+        type=str,
+        help="default image, to fill empty pages",
     )
     args = parser.parse_args()
 

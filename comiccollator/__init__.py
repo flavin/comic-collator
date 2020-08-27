@@ -38,7 +38,7 @@ def count_files(path: str, extension: str) -> int:
     if not path:
         return 0
     else:
-        return len(glob.glob1(path, "*.{}".format(extension)))
+        return len(glob.glob1(path, f"*.{extension}"))
 
 
 def get_print_order(order: str):
@@ -69,5 +69,5 @@ def validate_params(path: str, default_image: str):
     if not default_image.startswith("/"):
         raise ValueError("Default image must to be an absolute filename")
 
-    if not os.path.exists("{}".format(default_image)):
+    if not os.path.exists(f"{default_image}"):
         raise LookupError("Not found the default image")

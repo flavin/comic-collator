@@ -1,8 +1,8 @@
 import glob
 import os
 
-from printcomic.collator import ORDER_FACTORY, STYLE_TYPE, CollatedOrder
-from printcomic.image_writer import PRINT_ORDER, concat_couples
+from comiccollator.collator import ORDER_FACTORY, STYLE_TYPE, CollatedOrder
+from comiccollator.image_writer import PRINT_ORDER, concat_couples
 
 
 def create_printable_pages(

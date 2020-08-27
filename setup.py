@@ -11,20 +11,20 @@ with open(path.join(this_directory, "README.md"), encoding="utf-8") as f:
     long_description = f.read()
 
 setup(
-    name="printcomic",
+    name="comic-collator",
     version="0.1",
-    description="print comics, collate image files and concat images ready to print.",
+    description="collate image files and concat images ready to print.",
     license="MIT",
     long_description=long_description,
     long_description_content_type="text/markdown",
     author="Francisco Lavin",
-    packages=["printcomic"],
+    packages=["comiccollator"],
     install_requires=["Pillow"],
     scripts=[],
     test_suite="tests",
     entry_points={
           'console_scripts': [
-              'printcomic = printcomic.__main__:main'
+              'comiccollator = comiccollator.__main__:main'
           ]
       },
 )

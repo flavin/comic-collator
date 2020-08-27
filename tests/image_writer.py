@@ -1,7 +1,7 @@
 import os
 import unittest
 
-from printcomic.image_writer import get_image_name
+from comiccollator.image_writer import get_image_name
 
 
 class TestCollator(unittest.TestCase):

@@ -13,7 +13,7 @@ def create_printable_pages(
     back_order: str,
     wet_run: bool,
 ):
-    validate_params(path, default_image)
+    validate_params(style, path, default_image, back_order)
     order_pages = get_order_pages(
         style=get_collator_style(style),
         total=count_files(path, extension),
@@ -58,13 +58,19 @@ def get_collator_style(style: str) -> STYLE_TYPE:
         return STYLE_TYPE("western")
 
 
-def validate_params(path: str, default_image: str):
+def validate_params(style: str, path: str, default_image: str, back_order: str):
     """
     :raise ValueError
     :raise LookupError
     """
     if not path.endswith("/"):
         raise ValueError('Path must to end with "/"')
+
+    if style not in ['japan', 'western']:
+        raise ValueError(f"Style {style} not supported")
+
+    if back_order not in ['DESC', 'ASC']:
+        raise ValueError(f"Back order not supported {back_order} not supported")
 
     if not default_image.startswith("/"):
         raise ValueError("Default image must to be an absolute filename")

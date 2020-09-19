@@ -20,54 +20,48 @@ def concat_couples(
     default_image: Optional[str] = None,
     back_order: PRINT_ORDER = PRINT_ORDER.ASC,
     wet_run: bool = False,
-) -> Tuple[List[str], List[str]]:
-    front_file_names = []
-    back_file_names = []
+) -> Tuple[List, List]:
+    front_images = []
+    back_images = []
     if len(list_of_pages.front) != len(list_of_pages.back):
         raise RuntimeError("front page don't match with back pages")
     steps = 2
+
     print("Front pages")
     total = len(list_of_pages.front)
     for index, i in enumerate(range(0, total, steps), 1):
         if wet_run:
             progress(index / (total / steps))
-        output_name = f"{path}front-{str(index).zfill(3)}.{extension}"
-        front_file_names.append(output_name)
-        concat_couple(
+        concated_pages = concat_couple(
             path,
             list_of_pages.front[i],
             list_of_pages.front[i + 1],
-            output_name,
             extension,
             default_image,
             wet_run,
         )
+        front_images.append(concated_pages)
 
     print("\nBack page")
     for index, i in enumerate(range(0, total, steps), 1):
         if wet_run:
             progress(index / (total / steps))
-        back_order_index = int((total / steps)) - index + 1
-        back_order_sufix = (
-            f"{str(back_order_index).zfill(3)}-for_front_"
-            if back_order == PRINT_ORDER.DESC
-            else ""
-        )
-        output_name = f"{path}back-{back_order_sufix}{str(index).zfill(3)}.{extension}"
-        back_file_names.append(output_name)
-        concat_couple(
+        concated_pages = concat_couple(
             path,
             list_of_pages.back[i],
             list_of_pages.back[i + 1],
-            output_name,
             extension,
             default_image,
             wet_run,
         )
+        back_images.append(concated_pages)
+        if back_order == PRINT_ORDER.DESC:
+            back_images.reverse()
+
     print("\ndone")
     return (
-        front_file_names,
-        back_file_names,
+        front_images,
+        back_images,
     )
 
 
@@ -75,19 +69,16 @@ def concat_couple(
     path: str,
     index_a: int,
     index_b: int,
-    output_name: str,
     extension: str,
     default_image: Optional[str] = None,
     wet_run: bool = False,
-):
+) -> Image:
     image_a = get_image_name(path, index_a, extension, default_image)
     image_b = get_image_name(path, index_b, extension, default_image)
-    if wet_run:
-        new_image = concat(image_a, image_b)
-        new_image.save(output_name)
-    else:
-        print(" ".join([image_a, image_b, output_name]))
-
+    new_image = concat(image_a, image_b)
+    if not wet_run:
+        print(" ".join([image_a, image_b]))
+    return new_image
 
 def get_image_name(
     path: str, index: int, extension: str, default_image: Optional[str] = None
@@ -129,7 +120,7 @@ def concat(
     mode: str = "RGB",
     resample: int = Image.BICUBIC,
     resize_big_image: bool = True,
-):
+) -> Image:
     im1 = Image.open(image_a)
     im2 = Image.open(image_b)
 

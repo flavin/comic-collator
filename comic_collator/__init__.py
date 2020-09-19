@@ -4,7 +4,7 @@ import time
 
 from comic_collator.collator import ORDER_FACTORY, STYLE_TYPE, CollatedOrder
 from comic_collator.image_writer import PRINT_ORDER, concat_couples
-from comic_collator.pdf_writer import images_files_to_pdf
+from comic_collator.pdf_writer import images_to_pdf
 
 
 def create_printable_pages(
@@ -19,7 +19,7 @@ def create_printable_pages(
     order_pages = get_order_pages(
         style=get_collator_style(style), total=count_files(path, extension),
     )
-    front_files, back_files = concat_couples(
+    front_images, back_images = concat_couples(
         order_pages,
         path=path,
         extension=extension,
@@ -28,8 +28,8 @@ def create_printable_pages(
         wet_run=bool(wet_run),
     )
     millis = int(round(time.time() * 1000))
-    images_files_to_pdf(front_files, f"{path}/front-{millis}.pdf")
-    images_files_to_pdf(back_files, f"{path}/back-{millis}.pdf")
+    images_to_pdf(front_images, f"{path}/front-{millis}.pdf")
+    images_to_pdf(back_images, f"{path}/back-{millis}.pdf")
 
 
 def get_order_pages(style: STYLE_TYPE, total: int) -> CollatedOrder:

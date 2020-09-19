@@ -1,8 +1,10 @@
 import glob
 import os
+import time
 
 from comic_collator.collator import ORDER_FACTORY, STYLE_TYPE, CollatedOrder
 from comic_collator.image_writer import PRINT_ORDER, concat_couples
+from comic_collator.pdf_writer import images_files_to_pdf
 
 
 def create_printable_pages(
@@ -15,10 +17,9 @@ def create_printable_pages(
 ):
     validate_params(style, path, default_image, back_order)
     order_pages = get_order_pages(
-        style=get_collator_style(style),
-        total=count_files(path, extension),
+        style=get_collator_style(style), total=count_files(path, extension),
     )
-    concat_couples(
+    front_files, back_files = concat_couples(
         order_pages,
         path=path,
         extension=extension,
@@ -26,6 +27,9 @@ def create_printable_pages(
         back_order=get_print_order(back_order),
         wet_run=bool(wet_run),
     )
+    millis = int(round(time.time() * 1000))
+    images_files_to_pdf(front_files, f"{path}/front-{millis}.pdf")
+    images_files_to_pdf(back_files, f"{path}/back-{millis}.pdf")
 
 
 def get_order_pages(style: STYLE_TYPE, total: int) -> CollatedOrder:
@@ -66,10 +70,10 @@ def validate_params(style: str, path: str, default_image: str, back_order: str):
     if not path.endswith("/"):
         raise ValueError('Path must to end with "/"')
 
-    if style not in ['japan', 'western']:
+    if style not in ["japan", "western"]:
         raise ValueError(f"Style {style} not supported")
 
-    if back_order not in ['DESC', 'ASC']:
+    if back_order not in ["DESC", "ASC"]:
         raise ValueError(f"Back order not supported {back_order} not supported")
 
     if not default_image.startswith("/"):

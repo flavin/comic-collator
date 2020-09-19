@@ -1,6 +1,6 @@
 import os
 from enum import Enum
-from typing import Optional
+from typing import List, Optional, Tuple
 
 from PIL import Image
 
@@ -20,7 +20,9 @@ def concat_couples(
     default_image: Optional[str] = None,
     back_order: PRINT_ORDER = PRINT_ORDER.ASC,
     wet_run: bool = False,
-):
+) -> Tuple[List[str], List[str]]:
+    front_file_names = []
+    back_file_names = []
     if len(list_of_pages.front) != len(list_of_pages.back):
         raise RuntimeError("front page don't match with back pages")
     steps = 2
@@ -30,6 +32,7 @@ def concat_couples(
         if wet_run:
             progress(index / (total / steps))
         output_name = f"{path}front-{str(index).zfill(3)}.{extension}"
+        front_file_names.append(output_name)
         concat_couple(
             path,
             list_of_pages.front[i],
@@ -51,6 +54,7 @@ def concat_couples(
             else ""
         )
         output_name = f"{path}back-{back_order_sufix}{str(index).zfill(3)}.{extension}"
+        back_file_names.append(output_name)
         concat_couple(
             path,
             list_of_pages.back[i],
@@ -61,6 +65,10 @@ def concat_couples(
             wet_run,
         )
     print("\ndone")
+    return (
+        front_file_names,
+        back_file_names,
+    )
 
 
 def concat_couple(

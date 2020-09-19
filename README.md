@@ -19,7 +19,7 @@ comic_collator/__main__.py --path /route/to/comic-NN/ --extension png --default_
 * -w, --wet_run
    * save the output file
 * -s, --style [STYLE]
-   * how the page are collated, STYLE can be 'western' or 'japanese', default 'western'
+   * how the page are collated, STYLE can be 'western' or 'japan', default 'western'
 * -di, --default_image
    * default image, to fill empty pages.
 * -bo, --back_order [ORDER]

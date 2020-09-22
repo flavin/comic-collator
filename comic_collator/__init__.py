@@ -16,8 +16,12 @@ def create_printable_pages(
     wet_run: bool,
 ):
     validate_params(style, path, default_image, back_order)
+    total_of_files = count_files(path, extension)
+    if total_of_files < 2:
+        print('Not enought images(need 2 or more)')
+        return
     order_pages = get_order_pages(
-        style=get_collator_style(style), total=count_files(path, extension),
+        style=get_collator_style(style), total=total_of_files,
     )
     front_images, back_images = concat_couples(
         order_pages,
